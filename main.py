@@ -1,6 +1,4 @@
 from bs4 import BeautifulSoup
-import datetime
-from tinydb import TinyDB, Query
 import urllib3
 import xlsxwriter
 
@@ -31,7 +29,7 @@ information_to_find = [
 headlines = [info["itemprop"] for info in information_to_find]
 row = 0
 
-workbook = xlsxwriter.Workbook('motorcycle.xlsx')
+workbook = xlsxwriter.Workbook('catalog.xlsx')
 worksheet = workbook.add_worksheet()
 
 for col, title in enumerate(headlines):
