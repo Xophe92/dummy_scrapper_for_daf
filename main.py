@@ -67,10 +67,9 @@ for url in urls:
                 content_to_save = result.get_text()
             elif info["data_in"] == "html":
                 content_to_save = str(result)
-	    elif info["data_in"] == "reg_exp":
-		content_to_save = re.search(info["reg_exp"], result.get_text()).group(1)
-		reference = content_to_save
-		
+            elif info["data_in"] == "reg_exp":
+                content_to_save = re.search(info["reg_exp"], result.get_text()).group(1)
+                reference = content_to_save
             else:
                 content_to_save = result[info["data_in"]]
 
@@ -80,9 +79,8 @@ for url in urls:
             worksheet.write(row, col+1 , content_to_save.decode("utf-8"))
         download_file(image_url, reference+".jpeg")
     except Exception as e:        
-    	print(e)
+        print(e)
         print("foirage sur {}".format(url))
 
 workbook.close()
-
 
