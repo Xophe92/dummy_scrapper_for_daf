@@ -23,7 +23,7 @@ information_to_find = [
 {"tag_type" : "meta", "attribute_name":"itemprop", "attribute_value":"gtin13", "data_in":"content"},
 {"tag_type" : "meta", "attribute_name":"itemprop", "attribute_value":"priceCurrency", "data_in":"content"},
 {"tag_type" : "span", "attribute_name":"itemprop", "attribute_value":"price", "data_in":"content"},
-{"tag_type" : "div", "attribute_name":"itemprop", "attribute_value":"description", "data_in":"text"},
+{"tag_type" : "div", "attribute_name":"itemprop", "attribute_value":"description", "data_in":"html"},
 {"tag_type" : "img", "attribute_name":"itemprop", "attribute_value":"image", "data_in":"src"},
 {"tag_type" : "div", "attribute_name":"class", "attribute_value":"section small grey", "data_in":"reg_exp", "reg_exp":u"Référence : (.+)"},
 ]
@@ -64,6 +64,8 @@ for url in urls:
             result = soup.find_all(info["tag_type"], {info["attribute_name"] : info["attribute_value"]})[0]
 
             if info["data_in"] == "text":
+                content_to_save = result.get_text()
+            elif info["data_in"] == "html":
                 content_to_save = str(result)
 	    elif info["data_in"] == "reg_exp":
 		content_to_save = re.search(info["reg_exp"], result.get_text()).group(1)
