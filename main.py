@@ -5,6 +5,10 @@ import urllib3
 import xlsxwriter
 import re
 import requests
+import sys
+
+py_version = sys.version_info[0]
+
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
@@ -75,8 +79,10 @@ for url in urls:
 
             if info["attribute_value"] == "image":
                 image_url = content_to_save.replace("_preview", "_large")
-
-            worksheet.write(row, col+1 , content_to_save.decode("utf-8"))
+            if py_version == 3:
+                worksheet.write(row, col+1 , content_to_save)
+            else:
+                worksheet.write(row, col+1 , content_to_save.decode("utf-8"))
         download_file(image_url, reference+".jpeg")
     except Exception as e:        
         print(e)
