@@ -10,7 +10,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 url_radicals = "https://m.materielelectrique.com/bisou-daffounet-p-{}.html"
 
-urls = [url_radicals.format(str(i)) for i in range(1, 15)]
+urls = [url_radicals.format(str(i)) for i in range(1, 5)]
 
 
 def make_soup(url):
@@ -25,7 +25,7 @@ information_to_find = [
 {"tag_type" : "span", "attribute_name":"itemprop", "attribute_value":"price", "data_in":"content"},
 {"tag_type" : "div", "attribute_name":"itemprop", "attribute_value":"description", "data_in":"text"},
 {"tag_type" : "img", "attribute_name":"itemprop", "attribute_value":"image", "data_in":"src"},
-{"tag_type" : "div", "attribute_name":"class", "attribute_value":"section small grey", "data_in":"text", "reg_exp":u"Référence : (.+)"},
+{"tag_type" : "div", "attribute_name":"class", "attribute_value":"section small grey", "data_in":"reg_exp", "reg_exp":u"Référence : (.+)"},
 ]
 
 
@@ -64,23 +64,23 @@ for url in urls:
             result = soup.find_all(info["tag_type"], {info["attribute_name"] : info["attribute_value"]})[0]
 
             if info["data_in"] == "text":
-                content_to_save = result.get_text()
+                content_to_save = str(result)
+	    elif info["data_in"] == "reg_exp":
+		content_to_save = re.search(info["reg_exp"], result.get_text()).group(1)
+		reference = content_to_save
+		
             else:
                 content_to_save = result[info["data_in"]]
-
-            if "reg_exp" in info.keys():
-                content_to_save = re.search(info["reg_exp"], content_to_save).group(1)
-                reference = content_to_save
 
             if info["attribute_value"] == "image":
                 image_url = content_to_save.replace("_preview", "_large")
 
-            
-            worksheet.write(row, col+1 , content_to_save)
+            worksheet.write(row, col+1 , content_to_save.decode("utf-8"))
         download_file(image_url, reference+".jpeg")
     except Exception as e:        
     	print(e)
         print("foirage sur {}".format(url))
+
 workbook.close()
 
 
